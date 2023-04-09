@@ -1,0 +1,21 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Application\\": "Application",
+      "Infrastructure\\": "Infrastructure",
+      "grizzle\\": "grizzle"
+    }
+  },
+  "require-dev": {
+    "symfony/var-dumper": "v6.0"
+  },
+  "require": {
+    "guzzlehttp/guzzle": "^7.0",
+    "ext-pdo": "*"
+  },
+  "config": {
+    "platform": {
+      "php": "8.0.28"
+    }
+  }
+}
