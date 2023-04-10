@@ -1,6 +1,6 @@
 <?php
 
-namespace grizzle;
+namespace guzzle;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -9,7 +9,7 @@ use GuzzleHttp\Exception\GuzzleException;
 class IsItBlockedRknDetector implements RknDetectorInterface
 {
     protected Client $client;
-    protected string $url = 'http://192.168.1.24/';
+    protected string $url = 'url';
     // Вписать url
     public RknResponse $response;
 

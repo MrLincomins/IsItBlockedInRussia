@@ -1,6 +1,6 @@
 <?php
 
-namespace grizzle;
+namespace guzzle;
 
 class RknResponse
 {

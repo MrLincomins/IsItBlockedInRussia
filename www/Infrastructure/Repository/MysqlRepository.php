@@ -48,7 +48,7 @@ class MysqlRepository extends ConnectDB implements Repository
 
     public function ipv4Search(int $ipv4): array
     {
-        $sql = "SELECT * FROM blocked WHERE ipv4 = :ipv4";
+        $sql = "SELECT * FROM blocked WHERE FIND_IN_SET(:ipv4, REPLACE(CONCAT_WS(',', ipv4), ' ', ',')) > 0;";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute(['ipv4' => $ipv4]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

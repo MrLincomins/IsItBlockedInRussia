@@ -3,7 +3,7 @@
     "psr-4": {
       "Application\\": "Application",
       "Infrastructure\\": "Infrastructure",
-      "grizzle\\": "grizzle"
+      "guzzle\\": "guzzle"
     }
   },
   "require-dev": {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once '../vendor/autoload.php';
 
-use Application\Detector\Searcher;
+use Application\Performers\Searcher;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -32,31 +32,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>Заблокировано в РФ</h1>
     <input type="text" v-model="inputText" @input="updateGetParams">
     <div v-if="loading" class="loading"></div>
-    <table v-if="!loading && message">
-        <thead>
-        <tr>
-            <th>IPv4</th>
-            <th>IPv6</th>
-            <th>Domain</th>
-            <th>URL</th>
-            <th>Executive</th>
-            <th>Key</th>
-            <th>Date</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="item in message">
-            <td>{{ item['data'][0] }}</td>
-            <td>{{ item['data'][1] }}</td>
-            <td>{{ item['data'][2] }}</td>
-            <td>{{ item['data'][3] }}</td>
-            <td>{{ item['data'][4] }}</td>
-            <td>{{ item['data'][5] }}</td>
-            <td>{{ item['data'][6] }}</td>
-        </tr>
-        </tbody>
-    </table>
+    <div v-if="!loading && message && message[0].response === true">
+        <table>
+            <thead>
+            <tr>
+                <th>IPv4</th>
+                <th>IPv6</th>
+                <th>Domain</th>
+                <th>URL</th>
+                <th>Executive</th>
+                <th>Key</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="item in message">
+                <td>{{ item['data'][0] }}</td>
+                <td>{{ item['data'][1] }}</td>
+                <td>{{ item['data'][2] }}</td>
+                <td>{{ item['data'][3] }}</td>
+                <td>{{ item['data'][4] }}</td>
+                <td>{{ item['data'][5] }}</td>
+                <td>{{ item['data'][6] }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div v-for="item in message" v-if="!loading && message && message[0].response === false">
+        Сайт не заблокирован.       <!-- Не работает -->
+ </div>
 </div>
+
 </body>
 </html>
 <script>
@@ -76,6 +82,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     .then(data => {
                         this.loading = false;
                         this.message = data.message;
+                    })
+                    .then(data => {
+                        this.loading = false;
+                        if (data.message[0].responce === false) {
+                            this.message = 'Сайт не заблокирован.';
+                        } else {
+                            this.message = data.message;
+                        }
                     })
                     .catch(error => {
                         console.error(error);

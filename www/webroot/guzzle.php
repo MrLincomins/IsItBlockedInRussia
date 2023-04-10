@@ -1,6 +1,6 @@
 <?php
 require_once '../vendor/autoload.php';
-use grizzle\IsItBlockedRknDetector;
+use guzzle\IsItBlockedRknDetector;
 
 dd((new IsItBlockedRknDetector())->checkHost('ххх.new-rutor.org'));
 
