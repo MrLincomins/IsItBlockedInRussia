@@ -32,37 +32,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>Заблокировано в РФ</h1>
     <input type="text" v-model="inputText" @input="updateGetParams">
     <div v-if="loading" class="loading"></div>
-    <div v-if="!loading && message && message[0].response === true">
-        <table>
-            <thead>
-            <tr>
-                <th>IPv4</th>
-                <th>IPv6</th>
-                <th>Domain</th>
-                <th>URL</th>
-                <th>Executive</th>
-                <th>Key</th>
-                <th>Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="item in message">
-                <td>{{ item['data'][0] }}</td>
-                <td>{{ item['data'][1] }}</td>
-                <td>{{ item['data'][2] }}</td>
-                <td>{{ item['data'][3] }}</td>
-                <td>{{ item['data'][4] }}</td>
-                <td>{{ item['data'][5] }}</td>
-                <td>{{ item['data'][6] }}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div v-for="item in message" v-if="!loading && message && message[0].response === false">
-        Сайт не заблокирован.       <!-- Не работает -->
- </div>
+    <div v-if="!loading && site === 'Сайт не заблокирован.'" class="message">{{ site }}</div>
+    <table v-if="!loading && message">
+        <thead>
+        <tr>
+            <th>IPv4</th>
+            <th>IPv6</th>
+            <th>Domain</th>
+            <th>URL</th>
+            <th>Executive</th>
+            <th>Key</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in message">
+            <td>{{ item['data'][0] }}</td>
+            <td>{{ item['data'][1] }}</td>
+            <td>{{ item['data'][2] }}</td>
+            <td>{{ item['data'][3] }}</td>
+            <td>{{ item['data'][4] }}</td>
+            <td>{{ item['data'][5] }}</td>
+            <td>{{ item['data'][6] }}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
-
 </body>
 </html>
 <script>
@@ -72,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 inputText: '',
                 loading: false,
                 message: '',
+                site: '',
             };
         },
         methods: {
@@ -81,14 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     .then(response => response.json())
                     .then(data => {
                         this.loading = false;
-                        this.message = data.message;
-                    })
-                    .then(data => {
-                        this.loading = false;
                         if (data.message[0].responce === false) {
-                            this.message = 'Сайт не заблокирован.';
+                            this.message = ''
+                            this.site = 'Сайт не заблокирован.';
                         } else {
                             this.message = data.message;
+                            this.site = '';
                         }
                     })
                     .catch(error => {
@@ -155,6 +149,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         outline: none;
     }
 
+    .message {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 20px;
+        color: green;
+    }
+
     .loading {
         border: 8px solid #f3f3f3;
         border-top: 8px solid #8e24aa;
@@ -204,4 +206,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 </style>
-

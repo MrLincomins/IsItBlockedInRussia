@@ -39,6 +39,12 @@ class Searcher
                 $result[] = $this->ipParse($value);
             }
         }
+
+        if(!empty($ipWithMask)){
+            foreach ($ipWithMask as $i=> $ipMask) {
+                $ipWithMask[$i] = $this->ipParse($ipMask);
+            }
+        }
         $result = array_merge($result, (array)$ipWithMask);
 
         return $result ?? [['responce' => false]];
@@ -71,6 +77,9 @@ class Searcher
         $ipv4_array = array_map('long2ip', $ipv4_array);
         $ipv6 = implode(' ', $ipv6_array);
         $ipv4 = implode(' ', $ipv4_array);
+        if(!empty($value['ipv4Mask'])){
+            $ipv4 = $ipv4.'/'.$value['ipv4Mask'];
+        }
         return [
             'responce' => true,
             'data' => [
