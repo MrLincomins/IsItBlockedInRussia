@@ -17,6 +17,12 @@ class Searcher
     public function domainSearch($domain): array
     {
         $values = $this->db->domainSearch($domain);
+        $subDomain  = $this->subDomainSearch($domain);
+        if(!empty($subDomain)){
+            foreach ($subDomain as $sub) {
+                $values = array_merge($values, $sub);
+            }
+        }
         if (!empty($values)) {
             $valuesReturn = array();
             foreach ($values as $value) {
@@ -25,6 +31,23 @@ class Searcher
         }
         return $valuesReturn ?? [['responce' => false]];
         //Делает поиск по домену
+    }
+
+    public function subDomainSearch($domain): array
+    {
+        $subDomain = explode('.', $domain, -2);
+        if(!empty($subDomain)){
+            $withoutSub = explode('.', $domain);
+            $withoutSub = $withoutSub[1].'.'. $withoutSub[2];
+            $subDomain = $this->db->domainSearch($withoutSub);
+            $asteriskDomain = '*.'.$withoutSub;
+            $asteriskDomain = $this->db->domainSearch($asteriskDomain);
+            return [$asteriskDomain, $subDomain];
+        } else{
+            $asteriskDomain = '*.'.$domain;
+            $asteriskDomain = $this->db->domainSearch($asteriskDomain);
+            return [$asteriskDomain];
+        }
     }
 
     public function ipv4Search($ipv4): array
