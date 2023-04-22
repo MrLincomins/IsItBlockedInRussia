@@ -16,6 +16,7 @@ class Searcher
 
     public function domainSearch($domain): array
     {
+        $domain = $this->removeProtocol($domain);
         $values = $this->db->domainSearch($domain);
         $subDomain  = $this->subDomainSearch($domain);
         if(!empty($subDomain)){
@@ -31,6 +32,18 @@ class Searcher
         }
         return $valuesReturn ?? [['responce' => false]];
         //Делает поиск по домену
+    }
+
+    function removeProtocol($url): string
+    {
+        //Удаляет протоколы с домена
+        $protocols = array('http://', 'https://', 'ftp://', 'ftps://', 'ssh://', 'telnet://', 'mailto://');
+        foreach($protocols as $protocol) {
+            if(str_starts_with($url, $protocol)) {
+                return substr($url, strlen($protocol));
+            }
+        }
+        return $url;
     }
 
     public function subDomainSearch($domain): array
