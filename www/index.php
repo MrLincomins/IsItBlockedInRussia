@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once '../vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 use Application\Performers\Searcher;
 
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         methods: {
             callMyFunction() {
                 this.loading = true;
-                fetch(`${window.location.protocol}//${window.location.hostname}/webroot/search.php?inputText=${encodeURIComponent(this.inputText)}`)
+                fetch(`${window.location.protocol}//${window.location.hostname}/search.php?inputText=${encodeURIComponent(this.inputText)}`)
                     .then(response => response.json())
                     .then(data => {
                         this.loading = false;
@@ -119,7 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     app.mount('#app');
 </script>
 
-
 <style>
     * {
         box-sizing: border-box;
@@ -138,15 +137,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         padding: 30px;
         background-color: #fff;
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
     }
 
     input[type="text"] {
         width: 100%;
         padding: 10px;
         border: none;
-        border-bottom: 2px solid #ddd;
+        border-bottom: 3px solid #ddd;
         font-size: 16px;
         outline: none;
+        transition: border-bottom 0.3s ease-in-out;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        height: 40px;
+        padding: 10px;
+        font-size: 18px;
+        border-radius: 20px;
+        border-bottom: 3px solid #ffd674;
+        outline: none;
+    }
+
+    input[type="text"]:focus {
+        border-bottom: 3px solid #ce9413;
     }
 
     .message {
@@ -154,17 +169,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         font-weight: bold;
         text-align: center;
         margin-top: 20px;
-        color: green;
+        color: #4CAF50;
     }
 
     .loading {
-        border: 8px solid #f3f3f3;
-        border-top: 8px solid #8e24aa;
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        animation: spin 1s linear infinite;
-        margin: 10px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        margin-top: 20px;
+        background-image: url("https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
     }
 
     table {
@@ -173,8 +189,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         width: 100%;
     }
 
+    th, td {
+        text-align: left;
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+
+    tbody tr:hover {
+        background-color: #fafafa;
+    }
+
     thead {
-        background-color: #8e24aa;
+        background-color: #ce9413;
         color: #fff;
     }
 
@@ -184,18 +210,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         text-align: center;
         margin-top: 20px;
         color: #444;
+        margin-bottom: 20px;
     }
 
-    th,
-    td {
-        text-align: left;
-        padding: 15px;
-        border: 1px solid #ddd;
-    }
 
-    tbody tr:hover {
-        background-color: #fafafa;
-    }
+
 
     @keyframes spin {
         0% {

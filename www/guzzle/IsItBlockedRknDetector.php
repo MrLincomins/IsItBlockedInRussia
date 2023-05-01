@@ -9,7 +9,7 @@ use GuzzleHttp\Exception\GuzzleException;
 class IsItBlockedRknDetector implements RknDetectorInterface
 {
     protected Client $client;
-    protected string $url = 'url';
+    protected string $url = '192.168.1.24';
     // Вписать url
     public RknResponse $response;
 

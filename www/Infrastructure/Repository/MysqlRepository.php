@@ -37,12 +37,30 @@ class MysqlRepository extends ConnectDB implements Repository
         //Добавление в бд
     }
 
-    public function domainSearch(string $domain): array
+    public function domainSearch(string $domain, string $punyDomain): array
     {
-        $sql = "SELECT * FROM blocked WHERE domain = :domain";
+        $sql = "SELECT * FROM blocked WHERE domain = :domain OR domain = :punyDomain";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['domain' => $domain, 'punyDomain' => $punyDomain]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        //Поиск по домену
+    }
+
+    public function asteririskDomainSearch(string $domain): array
+    {
+        $sql = "SELECT * FROM blocked WHERE domain LIKE :domain";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute(['domain' => $domain]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function subDomainSearch(string $domain): array
+    {
+        $domain = '%.' . $domain;
+        $sql = "SELECT * FROM blocked WHERE domain LIKE :domain";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['domain' => $domain]);
+        return $stmt->fetchAll();
         //Поиск по домену
     }
 
