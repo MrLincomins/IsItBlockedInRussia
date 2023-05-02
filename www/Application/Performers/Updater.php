@@ -77,26 +77,28 @@ class Updater
         //Переводит все данные в читаемый формат, а ip в биты
     }
 
-        public function ipInetPton($ips): array
+    public function ipInetPton($ips): array
     {
         $ipAndMask = array();
         $ipv4 = '';
         $ipv6 = '';
-        if (is_array($ips)) {
-            $ips = array_slice($ips, 0, 4);
-        }
-
-        foreach ((array)$ips as $ip) {
-            if (str_contains($ip, '/')) {
-                [$ip, $mask] = explode('/', $ip);
-                $ipv4 .= ip2long($ip) . '';
-                $ipAndMask[1] = $mask;
-            } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        $ips = explode('|', $ips);
+        $ips = array_slice($ips, 0, 4);
+        //Вырезает все ip, оставляет только 4 штуки
+        foreach ($ips as $ip) {
+            if(count(explode('/', $ip)) == 2){
+                $ipAndMask = explode('/', $ip);
+                $ipv4 .= ip2long($ipAndMask[0]) . '';
+            }
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
                 $ipv4 .= ip2long($ip) . ' ';
             } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
                 $ipv6 .= inet_pton($ip) . ' ';
             }
         }
+        $ipv6 = rtrim($ipv6);
+        $ipv4 = rtrim($ipv4);
+        //Сортирует все ip на ipv4 и ipv6, а также переводит их в биты. (Также разбирает ip на маску)
         return [$ipv4, $ipv6, $ipAndMask[1] ?? null];
     }
 
