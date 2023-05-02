@@ -107,7 +107,7 @@ class Searcher
         if(is_array($value['ipv4'])) {
             $ipv4 = join(' ', array_map('long2ip', explode(' ', $value['ipv4'])));
         } else {
-            $ipv4 = long2ip($value['ipv4']);
+            $ipv4 = long2ip((int)$value['ipv4']);
         }
         $ipv6 = join(' ', array_map('inet_ntop', explode(' ', $value['ipv6'])));
         if (!empty($value['ipv4Mask'])) {
