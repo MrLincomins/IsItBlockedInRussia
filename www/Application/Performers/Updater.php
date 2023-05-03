@@ -48,6 +48,7 @@ class Updater
             $countInserts = $countInserts + count($inserts);
             $inserts = array();
         }
+        $this->db->addInfo($countInserts);
         return $countInserts;
         //Получает данные из Git-а, парсит их и добавляет в бд
     }
@@ -95,7 +96,7 @@ class Updater
             } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
                 $ipv6 .= inet_pton($ip) . ' ';
             }
-        }
+        } 
         $ipv6 = rtrim($ipv6);
         $ipv4 = rtrim($ipv4);
         //Сортирует все ip на ipv4 и ipv6, а также переводит их в биты. (Также разбирает ip на маску)

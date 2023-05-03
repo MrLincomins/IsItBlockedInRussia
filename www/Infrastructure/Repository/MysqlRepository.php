@@ -89,4 +89,22 @@ class MysqlRepository extends ConnectDB implements Repository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
         //Поиск по ipv4 и по маске
     }
+
+    public function addInfo($allLine): bool
+    {
+        $this->connection->query("TRUNCATE TABLE info");
+        $date = date("Y-m-d H:i:s");
+        $sql = "INSERT INTO info (date, allLine) VALUES (:date, :allLine)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['date' => $date, 'allLine' => $allLine]);
+        return True;
+    }
+
+    public function getInfo(): array
+    {
+        $sql = 'SELECT * FROM info LIMIT 1';
+        $stmt = $this->connection->query($sql);
+        return $stmt->fetchAll();
+
+    }
 }

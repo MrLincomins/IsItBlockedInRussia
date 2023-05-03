@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     exit();
 }
+$data = (new Searcher())->getInfo();
 ?>
 
 <!DOCTYPE html>
@@ -28,6 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://unpkg.com/vue@next"></script>
 </head>
 <body>
+<div>
+    <small><p align="right">Заполнено строк: <?php echo $data[0]['allLine'];?> <br> Время: <?php echo $data[0]['date'];?></p></small>
+</div>
 <div id="app">
     <h1>Заблокировано в РФ</h1>
     <input type="text" v-model="inputText" @input="updateGetParams">

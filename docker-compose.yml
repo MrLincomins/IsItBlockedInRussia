@@ -2,7 +2,7 @@ version: "3"
 
 services:
   mysql-server:
-    container_name: mysql-server
+    container_name: rkn-mysql
     restart: unless-stopped
     image: mysql:8
     command:
@@ -25,7 +25,7 @@ services:
       - zapret
 
   nginx:
-    container_name: nginx
+    container_name: rkn-nginx
     restart: always
     image: nginx
     ports:
@@ -45,7 +45,7 @@ services:
       context: ./.docker/php
       dockerfile: Dockerfile
     image: php
-    container_name: php
+    container_name: rkn-php
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
@@ -54,8 +54,8 @@ services:
     networks:
       - zapret
     depends_on:
-      - mysql-server
-      - nginx
+      - rkn-mysql
+      - rkn-nginx
 
 networks:
   zapret:

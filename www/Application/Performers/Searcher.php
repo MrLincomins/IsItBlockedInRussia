@@ -40,9 +40,7 @@ class Searcher
         $subDomain = null;
 
         $parts = explode('.', $domain, -2);
-
-        if(!empty($parts[0]) and $parts[0] != '*'){
-
+        if(isset($parts[0]) and $parts[0] != '*'){
             $parts = explode('.', $domain, );
             $withoutSub = $parts[1] . '.' . $parts[2];
             $subDomain = $this->db->domainSearch($withoutSub, idn_to_ascii($withoutSub));
@@ -160,7 +158,7 @@ class Searcher
         //Просто строит маршрут между другими функциями
     }
 
-    function ip_in_range($ip, $range): bool
+    public function ip_in_range($ip, $range): bool
     {
         if (!strpos($range, '/')) {
             $range .= '/32';
@@ -172,5 +170,10 @@ class Searcher
         $netmask_decimal = ~$wildcard_decimal;
         return (($ip_decimal & $netmask_decimal) == ($range_decimal & $netmask_decimal));
         // Проверяет, содержится ли IPv4 в подсети
+    }
+
+    public function getInfo(): array
+    {
+        return $this->db->getInfo();
     }
 }
