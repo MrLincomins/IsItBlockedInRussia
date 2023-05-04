@@ -34,11 +34,23 @@ CREATE TABLE `blocked` (
   KEY `domain` (`domain`(191)),
   KEY `url` (`url`(191))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `info`;
+CREATE TABLE `info` (
+  `date` datetime DEFAULT NULL,
+  `allLine` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `blocked`
 --
+
+LOCK TABLES `info` WRITE;
+/*!40000 ALTER TABLE `info` DISABLE KEYS */;
+/*!40000 ALTER TABLE `info` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 LOCK TABLES `blocked` WRITE;
 /*!40000 ALTER TABLE `blocked` DISABLE KEYS */;
