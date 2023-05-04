@@ -30,7 +30,7 @@ $data = (new Searcher())->getInfo();
 </head>
 <body>
 <div>
-    <small><p align="right">Заполнено строк: <?php echo $data[0]['allLine'];?> <br> Время: <?php echo $data[0]['date'];?></p></small>
+    <small><p align="right"> Обновлено в: <?php echo $data[0]['date'];?><br>Заполнено строк: <?php echo $data[0]['allLine'];?></p></small>
 </div>
 <div id="app">
     <h1>Заблокировано в РФ</h1>

@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  mysql-server:
+  rkn-mysql:
     container_name: rkn-mysql
     restart: unless-stopped
     image: mysql:8
@@ -22,9 +22,9 @@ services:
       - ./.docker/mysql/my.cnf:/etc/mysql/my.cnf
       - ./.docker/mysql-files:/var/lib/mysql-files
     networks:
-      - zapret
+      - rkn
 
-  nginx:
+  rkn-nginx:
     container_name: rkn-nginx
     restart: always
     image: nginx
@@ -37,10 +37,10 @@ services:
       - ./.docker/nginx/log:/var/log/nginx
       - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
-      - zapret
+      - rkn
 
 
-  php:
+  rkn-php:
     build:
       context: ./.docker/php
       dockerfile: Dockerfile
@@ -52,11 +52,11 @@ services:
       - ./www:/var/www
       - ./.docker/php/php.ini:/usr/local/etc/php/conf.d/uploads.ini
     networks:
-      - zapret
+      - rkn
     depends_on:
       - rkn-mysql
       - rkn-nginx
 
 networks:
-  zapret:
+  rkn:
     driver: bridge
