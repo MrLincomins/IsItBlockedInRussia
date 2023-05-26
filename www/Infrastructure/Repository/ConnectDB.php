@@ -6,7 +6,7 @@ use PDO;
 
 abstract class ConnectDB
 {
-    private string $host = 'mysql-server:3306';
+    private string $host = 'rkn-mysql:3306';
     private string $user = 'root';
     private string $password = 'root_zapret';
     private string $database = 'zapret';
