@@ -9,13 +9,8 @@ use Application\Performers\Searcher;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     header('Content-Type: application/json');
-    $error = (new Searcher())->checkData($data['host']);
-    if (!$error) {
-        $values = (new Searcher())->search($data['host']);
-        echo json_encode($values);
-    } else {
-        echo json_encode($error);
-    }
+    $values = (new Searcher())->search($data['host']);
+    echo json_encode($values);
     exit();
 }
 $data = (new Searcher())->getInfo();

@@ -40,16 +40,16 @@ class Searcher
         $subDomain = null;
 
         $parts = explode('.', $domain, -2);
-        if(isset($parts[0]) and $parts[0] != '*'){
-            $parts = explode('.', $domain, );
+        if (isset($parts[0]) and $parts[0] != '*') {
+            $parts = explode('.', $domain,);
             $withoutSub = $parts[1] . '.' . $parts[2];
             $subDomain = $this->db->domainSearch($withoutSub, idn_to_ascii($withoutSub));
             $asteriskDomain = '*.' . $withoutSub;
             $asteriskDomain = $this->db->asteririskDomainSearch($asteriskDomain);
 
-        } elseif(!empty($parts[0]) and @$parts[0] == '*') {
+        } elseif (!empty($parts[0]) and @$parts[0] == '*') {
 
-            $parts = explode('.', $domain, );
+            $parts = explode('.', $domain,);
             $withoutSub = $parts[1] . '.' . $parts[2];
             $asteriskDomain = '%.' . $withoutSub;
             $asteriskDomain = $this->db->asteririskDomainSearch($asteriskDomain);
@@ -102,7 +102,7 @@ class Searcher
     #[ArrayShape(['responce' => "bool", 'data' => "array"])]
     public function ipParse(mixed $value): array
     {
-        if(is_array($value['ipv4'])) {
+        if (is_array($value['ipv4'])) {
             $ipv4 = join(' ', array_map('long2ip', explode(' ', $value['ipv4'])));
         } else {
             $ipv4 = long2ip((int)$value['ipv4']);
@@ -126,33 +126,64 @@ class Searcher
     }
 
 
-    public function checkData(string $data): \Exception|bool
+    public function checkData(string|array $data): \Exception|bool
     {
-        if (!empty(filter_var($data, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))) {
-            return new \Exception('IPv6 addresses are unsupported');
-        } elseif (empty(@gethostbyaddr($data))
-            && empty(@gethostbyname($data))) {
-            return new \Exception('Enter the actual IPv4 address or domain');
-        } elseif ((mb_detect_encoding($data, ['UTF-8', 'ASCII'], true) == "UTF-8"
-            && mb_detect_encoding($data, ['UTF-8', 'ASCII'], true) == "ASCII")) {
-            return new \Exception('Unknown format');
+        if (is_array($data)) {
+            foreach ($data as $dates) {
+                $result = $this->validateData($dates);
+                if ($result instanceof \Exception) {
+                    return $result;
+                }
+            }
+        } else {
+            $result = $this->validateData($data);
+            if ($result instanceof \Exception) {
+                return $result;
+            }
         }
-        // Проверяет введённые пользователем значения
-        else {
-            return False;
-        }
+
+        return false;
     }
 
-    public function search(string $data): array|\Exception
+    private function validateData(string $dates): \Exception|bool
     {
-        $errors = $this->checkData($data);
+        if (!empty(filter_var($dates, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))) {
+            return new \Exception('IPv6 addresses are unsupported');
+        }
+
+        if (empty(@gethostbyaddr($dates)) && empty(@gethostbyname($dates))) {
+            return new \Exception('Enter the actual IPv4 address or domain');
+        }
+
+        $encoding = mb_detect_encoding($dates, ['UTF-8', 'ASCII'], true);
+        if ($encoding !== "UTF-8" && $encoding !== "ASCII") {
+            return new \Exception('Unknown format');
+        }
+
+        return false;
+    }
+
+    public function search(string|array $dates): array|\Exception
+    {
+        $errors = $this->checkData($dates);
         if ($errors) {
             return $errors;
         }
-        if (filter_var($data, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            $result = $this->ipv4Search($data);
+        $result = [];
+        if(is_array($dates)) {
+            foreach ($dates as $data) {
+                if (filter_var($data, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                    $result[] = $this->ipv4Search($data);
+                } else {
+                    $result[] = $this->domainSearch($data);
+                }
+            }
         } else {
-            $result = $this->domainSearch($data);
+            if (filter_var($dates, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                $result = $this->ipv4Search($dates);
+            } else {
+                $result = $this->domainSearch($dates);
+            }
         }
         return $result;
         //Просто строит маршрут между другими функциями

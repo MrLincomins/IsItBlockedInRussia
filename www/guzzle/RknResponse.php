@@ -4,17 +4,17 @@ namespace guzzle;
 
 class RknResponse
 {
-    protected bool $isBlocked;
+    protected array $isBlocked;
     protected ?\Exception $exception;
 
 
-    public function setIsBlocked(bool $value): self {
+    public function setIsBlocked(array $value): self {
         $this->isBlocked = $value;
         return $this;
     }
     //Устанавливает заблокирован ли сайт
 
-    public function isBlocked(): ?bool
+    public function isBlocked(): array
     {
         return $this->isBlocked;
     }

@@ -33,8 +33,34 @@ class IsItBlockedRknDetector implements RknDetectorInterface
                 'headers' => [
                     'Content-Type' => 'application/json',
                 ]]);
-            $data = (json_decode($body->getBody(), true));
-            $this->response->setIsBlocked($data[0]['responce']);
+            $items = (json_decode($body->getBody(), true));
+            $responce = $items[0]['responce'];
+            $data = ['in_black_list' => $responce];
+            $this->response->setIsBlocked($data);
+        } catch (GuzzleException| \Exception $e) {
+            $this->response->setException($e);
+        }
+        return $this->response;
+    }
+
+    public function checkHosts(array $hosts): RknResponse
+    {
+        try {
+            $body = $this->client->request('POST', $this->url, [
+                'body' => json_encode([
+                    'host' => $hosts,
+                ]),
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                ]]);
+            $result = [];
+            $items = (json_decode($body->getBody(), true));
+            foreach ($items as $i => $data){
+                $response = $data[0]['responce'];
+                $host = $hosts[$i];
+                $result[$host] = $response;
+            }
+            $this->response->setIsBlocked($result);
         } catch (GuzzleException| \Exception $e) {
             $this->response->setException($e);
         }
